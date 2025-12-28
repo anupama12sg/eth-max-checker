@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { toPng } from 'html-to-image';
 import { formatTime, getTier, getTierColor } from '@/lib/gameData';
-import ethMumbaiLogo from '@/assets/ethmumbai-logo.png';
+import ethMumbaiLogo from '@/assets/ethmumbai.jpg';
 import { Download, Twitter } from 'lucide-react';
 
 interface MaxiCardProps {
