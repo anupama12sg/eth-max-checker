@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import creatorAvatar from '@/assets/creator-avatar.png';
+import creatorAvatar from '@/assets/creator-avatar.jpeg';
 import { Twitter, Github, Globe } from 'lucide-react';
 
 const About = () => {
