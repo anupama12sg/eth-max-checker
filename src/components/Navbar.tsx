@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import ethMumbaiLogo from '@/assets/ethmumbai-logo.png';
+import ethMumbaiLogo from '@/assets/ethmumbai.jpg';
 
 const Navbar = () => {
   const location = useLocation();
