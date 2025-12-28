@@ -6,11 +6,11 @@ const Footer = () => {
       <div className="container mx-auto px-3">
         <div className="flex items-center justify-between text-xs">
           <p className="text-muted-foreground">
-            Built with ❤️ for <span className="text-primary font-semibold">ETHMumbai 2025</span>
+            Built in Mumbai Local for <span className="text-primary font-semibold">ETHMumbai 2026</span>
           </p>
           
           <a
-            href="https://twitter.com"
+            href="https://x.com/Anu31415"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-primary transition-colors"
