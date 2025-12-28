@@ -1,25 +1,30 @@
 import { allSnakesAndLadders } from '@/lib/gameData';
+import { useMemo } from 'react';
 
 interface GameBoardProps {
   playerPosition: number;
+  isMoving?: boolean;
 }
 
-const GameBoard = ({ playerPosition }: GameBoardProps) => {
+const GameBoard = ({ playerPosition, isMoving }: GameBoardProps) => {
+  // Random blue accent squares (consistent across renders)
+  const blueSquares = useMemo(() => {
+    const squares = new Set<number>();
+    for (let i = 0; i < 15; i++) {
+      squares.add(Math.floor(Math.random() * 100) + 1);
+    }
+    return squares;
+  }, []);
+
   // Create board array (10x10 = 100 squares)
   const createBoardLayout = () => {
     const rows: number[][] = [];
     for (let row = 9; row >= 0; row--) {
       const rowSquares: number[] = [];
-      const isEvenRow = row % 2 === 0;
-      
       for (let col = 0; col < 10; col++) {
+        const isEvenRow = (9 - row) % 2 === 0;
         const squareNum = row * 10 + (isEvenRow ? col + 1 : 10 - col);
         rowSquares.push(squareNum);
-      }
-      
-      // Reverse for serpentine layout
-      if (row % 2 === 1) {
-        rowSquares.reverse();
       }
       rows.push(rowSquares);
     }
@@ -28,25 +33,25 @@ const GameBoard = ({ playerPosition }: GameBoardProps) => {
 
   const boardLayout = createBoardLayout();
 
-  const getSquareType = (num: number): 'ladder' | 'snake' | null => {
-    const item = allSnakesAndLadders.find(s => s.start === num);
-    return item?.type || null;
-  };
-
   const getSquareInfo = (num: number) => {
     return allSnakesAndLadders.find(s => s.start === num);
   };
 
   const getSquareColor = (num: number) => {
-    const type = getSquareType(num);
-    if (type === 'ladder') return 'bg-mumbai-green/20 border-mumbai-green';
-    if (type === 'snake') return 'bg-mumbai-red/20 border-mumbai-red';
+    const info = getSquareInfo(num);
+    if (info?.type === 'ladder') return 'bg-mumbai-green/30 border-mumbai-green/60';
+    if (info?.type === 'snake') return 'bg-primary/30 border-primary/60';
     
-    // Checkerboard pattern
+    // Light blue accent squares
+    if (blueSquares.has(num)) return 'bg-accent/20 border-accent/40';
+    
+    // Red and Yellow checkerboard pattern
     const row = Math.floor((num - 1) / 10);
     const col = (num - 1) % 10;
     const isEven = (row + col) % 2 === 0;
-    return isEven ? 'bg-muted/50 border-border' : 'bg-card border-border';
+    return isEven 
+      ? 'bg-primary/10 border-primary/30' 
+      : 'bg-secondary/10 border-secondary/30';
   };
 
   const getSquareIcon = (num: number) => {
@@ -63,59 +68,68 @@ const GameBoard = ({ playerPosition }: GameBoardProps) => {
     return '🐍';
   };
 
+  const getDestination = (num: number) => {
+    const info = getSquareInfo(num);
+    return info?.end;
+  };
+
   return (
-    <div className="w-full max-w-lg mx-auto p-2 bg-gradient-board rounded-2xl card-shadow">
-      <div className="grid grid-cols-10 gap-0.5 sm:gap-1">
-        {boardLayout.map((row, rowIdx) =>
-          row.map((squareNum) => (
-            <div
-              key={squareNum}
-              className={`
-                board-square text-xs sm:text-sm rounded-md sm:rounded-lg border-2
-                ${getSquareColor(squareNum)}
-                ${squareNum === 100 ? 'bg-gradient-mumbai text-primary-foreground' : ''}
-                ${playerPosition === squareNum ? 'ring-2 ring-accent ring-offset-2 ring-offset-background' : ''}
-              `}
-            >
-              <div className="relative w-full h-full flex flex-col items-center justify-center p-0.5 sm:p-1">
-                <span className="text-[10px] sm:text-xs opacity-70">{squareNum}</span>
-                {getSquareIcon(squareNum) && (
-                  <span className="text-sm sm:text-lg">{getSquareIcon(squareNum)}</span>
-                )}
-                {playerPosition === squareNum && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-4 h-4 sm:w-6 sm:h-6 bg-accent rounded-full animate-pulse-glow flex items-center justify-center text-xs">
-                      👤
+    <div className="w-full p-1.5 bg-gradient-board rounded-xl card-shadow border border-border">
+      <div className="grid grid-cols-10 gap-0.5">
+        {boardLayout.map((row) =>
+          row.map((squareNum) => {
+            const icon = getSquareIcon(squareNum);
+            const destination = getDestination(squareNum);
+            const isPlayerHere = playerPosition === squareNum;
+            
+            return (
+              <div
+                key={squareNum}
+                className={`
+                  board-square text-[8px] sm:text-[10px] rounded border
+                  ${getSquareColor(squareNum)}
+                  ${squareNum === 100 ? 'bg-gradient-mumbai border-secondary' : ''}
+                  ${isPlayerHere ? 'ring-2 ring-secondary ring-offset-1 ring-offset-background z-20' : ''}
+                `}
+              >
+                <div className="relative w-full h-full flex flex-col items-center justify-center">
+                  <span className="opacity-60 leading-none">{squareNum}</span>
+                  
+                  {icon && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-sm sm:text-base">{icon}</span>
+                      {destination && (
+                        <span className="absolute -bottom-0.5 right-0 text-[6px] sm:text-[8px] font-bold bg-background/80 px-0.5 rounded">
+                          →{destination}
+                        </span>
+                      )}
                     </div>
-                  </div>
-                )}
-                {squareNum === 100 && (
-                  <span className="text-[8px] sm:text-[10px] font-bold">🏁</span>
-                )}
+                  )}
+                  
+                  {isPlayerHere && (
+                    <div className={`absolute inset-0 flex items-center justify-center z-10 ${isMoving ? 'animate-player-move' : ''}`}>
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 bg-secondary rounded-full animate-pulse-glow flex items-center justify-center text-[10px] border-2 border-background">
+                        👤
+                      </div>
+                    </div>
+                  )}
+                  
+                  {squareNum === 100 && (
+                    <span className="text-[10px] sm:text-xs">🏁</span>
+                  )}
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
       
-      {/* Legend */}
-      <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs sm:text-sm">
-        <div className="flex items-center gap-2">
-          <span>🛺</span>
-          <span className="text-muted-foreground">Auto</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span>🚃</span>
-          <span className="text-muted-foreground">Local</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span>🚄</span>
-          <span className="text-muted-foreground">Vande Bharat</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span>🐍</span>
-          <span className="text-muted-foreground">Wrong Train</span>
-        </div>
+      {/* Compact Legend */}
+      <div className="mt-2 flex flex-wrap justify-center gap-2 text-[10px]">
+        <span className="flex items-center gap-1"><span>🛺</span>Auto</span>
+        <span className="flex items-center gap-1"><span>🚃</span>Local</span>
+        <span className="flex items-center gap-1"><span>🚄</span>Express</span>
+        <span className="flex items-center gap-1"><span>🐍</span>Wrong</span>
       </div>
     </div>
   );

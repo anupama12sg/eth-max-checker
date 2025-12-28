@@ -33,6 +33,7 @@ const Index = () => {
   });
   const [diceValue, setDiceValue] = useState(1);
   const [isRolling, setIsRolling] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
   const [timerStarted, setTimerStarted] = useState(false);
   const [animation, setAnimation] = useState<{
     type: 'transport' | 'celebration' | null;
@@ -63,6 +64,7 @@ const Index = () => {
     }
 
     setIsRolling(true);
+    setIsMoving(true);
 
     // Simulate dice roll
     const rollResult = Math.floor(Math.random() * 6) + 1;
@@ -86,18 +88,22 @@ const Index = () => {
         rollHistory: [...prev.rollHistory, rollResult],
       }));
 
+      setTimeout(() => setIsMoving(false), 400);
+
       // Check for snake or ladder
       const snakeOrLadder = checkSnakeOrLadder(newPosition);
       if (snakeOrLadder) {
-        setAnimation({
-          type: 'transport',
-          data: {
-            transport: snakeOrLadder.transport,
-            type: snakeOrLadder.type,
-            from: snakeOrLadder.start,
-            to: snakeOrLadder.end,
-          },
-        });
+        setTimeout(() => {
+          setAnimation({
+            type: 'transport',
+            data: {
+              transport: snakeOrLadder.transport,
+              type: snakeOrLadder.type,
+              from: snakeOrLadder.start,
+              to: snakeOrLadder.end,
+            },
+          });
+        }, 300);
       } else if (newPosition === 100) {
         // Game over - celebrate!
         handleGameComplete(newPosition);
@@ -110,11 +116,13 @@ const Index = () => {
     if (snakeOrLadder) {
       const newPosition = snakeOrLadder.end;
 
+      setIsMoving(true);
       setGameState((prev) => ({
         ...prev,
         position: newPosition,
       }));
 
+      setTimeout(() => setIsMoving(false), 400);
       setAnimation({ type: null });
 
       // Check if this move completes the game
@@ -162,10 +170,10 @@ const Index = () => {
   const playerRank = gameState.entryId ? getPlayerRank(gameState.entryId) : 0;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
       <Navbar />
 
-      <main className="flex-1 pt-20 pb-8">
+      <main className="flex-1 pt-16 pb-2 overflow-hidden">
         {!username && <UsernameModal onSubmit={setUsername} />}
 
         {animation.type === 'transport' && (
@@ -182,53 +190,58 @@ const Index = () => {
           <CelebrationAnimation onComplete={handleCelebrationComplete} />
         )}
 
-        <div className="container mx-auto px-4">
-          {/* Header */}
-          <div className="text-center mb-6">
-            <h1 className="font-display text-3xl sm:text-5xl text-gradient-mumbai mb-2">
-              ETHMumbai Maxi Checker
-            </h1>
-            {username && (
-              <p className="text-muted-foreground">
-                Playing as <span className="text-foreground font-semibold">{username}</span>
-              </p>
-            )}
-          </div>
-
+        <div className="container mx-auto px-2 h-full flex flex-col">
           {gameState.isGameOver ? (
             /* Game Over Screen */
-            <div className="max-w-2xl mx-auto animate-fade-in">
-              <MaxiCard
-                username={username!}
-                time={gameState.time}
-                rolls={gameState.rolls}
-                rank={playerRank}
-                totalPlayers={leaderboard.length}
-              />
+            <div className="flex-1 flex items-center justify-center overflow-auto py-4">
+              <div className="w-full max-w-lg">
+                <MaxiCard
+                  username={username!}
+                  time={gameState.time}
+                  rolls={gameState.rolls}
+                  rank={playerRank}
+                  totalPlayers={leaderboard.length}
+                />
 
-              <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                <button
-                  onClick={handlePlayAgain}
-                  className="px-8 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 transition-opacity"
-                >
-                  Play Again 🎲
-                </button>
-                <Link
-                  to="/leaderboard"
-                  className="px-8 py-3 bg-secondary text-secondary-foreground font-bold rounded-xl text-center hover:opacity-90 transition-opacity"
-                >
-                  View Leaderboard 🏆
-                </Link>
+                <div className="mt-6 flex justify-center gap-3">
+                  <button
+                    onClick={handlePlayAgain}
+                    className="px-6 py-2 bg-primary text-primary-foreground font-bold rounded-lg hover:opacity-90 transition-opacity text-sm"
+                  >
+                    Play Again 🎲
+                  </button>
+                  <Link
+                    to="/leaderboard"
+                    className="px-6 py-2 bg-secondary text-secondary-foreground font-bold rounded-lg text-center hover:opacity-90 transition-opacity text-sm"
+                  >
+                    Leaderboard 🏆
+                  </Link>
+                </div>
               </div>
             </div>
           ) : (
-            /* Game Screen */
-            <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-start">
+            /* Game Screen - Single Screen Layout */
+            <div className="flex-1 flex flex-col lg:flex-row gap-3 items-center justify-center">
               {/* Game Board */}
-              <GameBoard playerPosition={gameState.position} />
+              <div className="flex-shrink-0 w-full max-w-[min(100%,420px)] lg:max-w-[450px]">
+                <GameBoard playerPosition={gameState.position} isMoving={isMoving} />
+              </div>
 
-              {/* Controls */}
-              <div className="lg:w-80 space-y-6">
+              {/* Controls Panel - Side on desktop, below on mobile */}
+              <div className="w-full lg:w-64 flex flex-col gap-3">
+                {/* Title - Mobile only shows small version */}
+                <div className="text-center lg:text-left">
+                  <h1 className="font-display text-xl sm:text-2xl lg:text-3xl text-gradient-mumbai">
+                    ETHMumbai Maxi
+                  </h1>
+                  {username && (
+                    <p className="text-xs text-muted-foreground">
+                      Playing as <span className="text-foreground font-semibold">{username}</span>
+                    </p>
+                  )}
+                </div>
+
+                {/* Stats */}
                 <GameStats
                   position={gameState.position}
                   rolls={gameState.rolls}
@@ -236,7 +249,8 @@ const Index = () => {
                   rollHistory={gameState.rollHistory}
                 />
 
-                <div className="flex justify-center">
+                {/* Dice and Roll Button */}
+                <div className="flex justify-center lg:justify-start">
                   <Dice
                     value={diceValue}
                     isRolling={isRolling}
@@ -245,16 +259,16 @@ const Index = () => {
                   />
                 </div>
 
-                {/* Progress */}
-                <div className="bg-card rounded-xl p-4 card-shadow">
-                  <p className="text-sm text-muted-foreground mb-2">Progress to ETHMumbai</p>
-                  <div className="h-4 bg-muted rounded-full overflow-hidden">
+                {/* Progress Bar */}
+                <div className="bg-card/80 rounded-lg p-3 border border-border">
+                  <p className="text-[10px] text-muted-foreground mb-1">Progress</p>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-mumbai transition-all duration-500"
                       style={{ width: `${gameState.position}%` }}
                     />
                   </div>
-                  <p className="text-xs text-right mt-1 text-muted-foreground">
+                  <p className="text-[10px] text-right mt-0.5 text-muted-foreground">
                     {gameState.position}/100
                   </p>
                 </div>

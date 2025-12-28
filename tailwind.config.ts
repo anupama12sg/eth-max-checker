@@ -52,12 +52,12 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         mumbai: {
-          saffron: "hsl(var(--mumbai-saffron))",
-          blue: "hsl(var(--mumbai-blue))",
-          gold: "hsl(var(--mumbai-gold))",
           red: "hsl(var(--mumbai-red))",
+          yellow: "hsl(var(--mumbai-yellow))",
+          blue: "hsl(var(--mumbai-blue))",
+          orange: "hsl(var(--mumbai-orange))",
           green: "hsl(var(--mumbai-green))",
-          purple: "hsl(var(--mumbai-purple))",
+          dark: "hsl(var(--mumbai-dark))",
         },
       },
       borderRadius: {
