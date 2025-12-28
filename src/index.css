@@ -6,58 +6,59 @@
 
 @layer base {
   :root {
-    /* Mumbai vibrant theme - Saffron Orange & Deep Blue */
-    --background: 222 47% 11%;
+    /* Mumbai vibrant theme - Red & Yellow with Light Blue accents */
+    --background: 0 0% 8%;
     --foreground: 45 100% 96%;
 
-    --card: 222 47% 14%;
+    --card: 0 0% 12%;
     --card-foreground: 45 100% 96%;
 
-    --popover: 222 47% 14%;
+    --popover: 0 0% 12%;
     --popover-foreground: 45 100% 96%;
 
-    /* Vibrant Saffron Orange */
-    --primary: 28 100% 55%;
-    --primary-foreground: 222 47% 11%;
+    /* Vibrant Red */
+    --primary: 0 85% 50%;
+    --primary-foreground: 45 100% 96%;
 
-    /* Deep Mumbai Blue */
-    --secondary: 220 90% 56%;
-    --secondary-foreground: 45 100% 96%;
+    /* Bright Yellow */
+    --secondary: 45 100% 50%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 222 40% 20%;
-    --muted-foreground: 220 15% 65%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
 
-    /* Golden Yellow Accent */
-    --accent: 45 100% 50%;
-    --accent-foreground: 222 47% 11%;
+    /* Light Blue Accent */
+    --accent: 200 90% 60%;
+    --accent-foreground: 0 0% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 45 100% 96%;
 
-    --border: 222 30% 25%;
-    --input: 222 30% 25%;
-    --ring: 28 100% 55%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 85% 50%;
 
     --radius: 0.75rem;
 
     /* Custom Mumbai Colors */
-    --mumbai-saffron: 28 100% 55%;
-    --mumbai-blue: 220 90% 56%;
-    --mumbai-gold: 45 100% 50%;
-    --mumbai-red: 0 80% 50%;
-    --mumbai-green: 145 70% 40%;
-    --mumbai-purple: 270 70% 55%;
+    --mumbai-red: 0 85% 50%;
+    --mumbai-yellow: 45 100% 50%;
+    --mumbai-blue: 200 90% 60%;
+    --mumbai-orange: 25 100% 55%;
+    --mumbai-green: 145 70% 45%;
+    --mumbai-dark: 0 0% 8%;
     
     /* Gradients */
-    --gradient-mumbai: linear-gradient(135deg, hsl(28 100% 55%), hsl(45 100% 50%));
-    --gradient-crypto: linear-gradient(135deg, hsl(220 90% 56%), hsl(270 70% 55%));
-    --gradient-board: linear-gradient(180deg, hsl(222 47% 14%), hsl(222 47% 8%));
-    --gradient-celebration: linear-gradient(135deg, hsl(28 100% 55%), hsl(0 80% 50%), hsl(45 100% 50%));
+    --gradient-mumbai: linear-gradient(135deg, hsl(0 85% 50%), hsl(45 100% 50%));
+    --gradient-fire: linear-gradient(135deg, hsl(0 85% 50%), hsl(25 100% 55%), hsl(45 100% 50%));
+    --gradient-board: linear-gradient(180deg, hsl(0 0% 12%), hsl(0 0% 6%));
+    --gradient-celebration: linear-gradient(135deg, hsl(0 85% 50%), hsl(45 100% 50%), hsl(200 90% 60%));
 
     /* Shadows */
-    --shadow-glow: 0 0 30px hsl(28 100% 55% / 0.4);
-    --shadow-card: 0 10px 40px hsl(0 0% 0% / 0.3);
-    --shadow-dice: 0 8px 20px hsl(0 0% 0% / 0.4);
+    --shadow-glow: 0 0 30px hsl(0 85% 50% / 0.5);
+    --shadow-yellow-glow: 0 0 30px hsl(45 100% 50% / 0.5);
+    --shadow-card: 0 10px 40px hsl(0 0% 0% / 0.4);
+    --shadow-dice: 0 8px 20px hsl(0 0% 0% / 0.5);
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -89,8 +90,8 @@
     background-clip: text;
   }
 
-  .text-gradient-crypto {
-    background: var(--gradient-crypto);
+  .text-gradient-fire {
+    background: var(--gradient-fire);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -100,8 +101,8 @@
     background: var(--gradient-mumbai);
   }
 
-  .bg-gradient-crypto {
-    background: var(--gradient-crypto);
+  .bg-gradient-fire {
+    background: var(--gradient-fire);
   }
 
   .bg-gradient-board {
@@ -110,6 +111,10 @@
 
   .glow-primary {
     box-shadow: var(--shadow-glow);
+  }
+
+  .glow-yellow {
+    box-shadow: var(--shadow-yellow-glow);
   }
 
   .card-shadow {
@@ -135,24 +140,79 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px hsl(28 100% 55% / 0.4); }
-  50% { box-shadow: 0 0 40px hsl(28 100% 55% / 0.8); }
+  0%, 100% { box-shadow: 0 0 15px hsl(45 100% 50% / 0.5); }
+  50% { box-shadow: 0 0 30px hsl(45 100% 50% / 0.9); }
 }
 
-@keyframes slide-up {
-  0% { transform: translateY(100vh); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 15px hsl(0 85% 50% / 0.5); }
+  50% { box-shadow: 0 0 30px hsl(0 85% 50% / 0.9); }
 }
 
-@keyframes slide-down {
-  0% { transform: translateY(-100vh); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+@keyframes vehicle-travel {
+  0% { 
+    transform: translateX(-150%) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(0%) scale(1.1);
+  }
+  85% {
+    transform: translateX(50%) scale(1);
+    opacity: 1;
+  }
+  100% { 
+    transform: translateX(150%) scale(0.8);
+    opacity: 0;
+  }
 }
 
-@keyframes train-move {
-  0% { transform: translateX(-100vw); }
-  50% { transform: translateX(0); }
-  100% { transform: translateX(100vw); }
+@keyframes vehicle-up {
+  0% { 
+    transform: translateY(100%) translateX(-50%) rotate(-30deg);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(50%) translateX(-30%) rotate(-15deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(0%) translateX(0%) rotate(0deg) scale(1.2);
+  }
+  80% {
+    transform: translateY(-50%) translateX(30%) rotate(15deg);
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(-100%) translateX(50%) rotate(30deg);
+    opacity: 0;
+  }
+}
+
+@keyframes vehicle-down {
+  0% { 
+    transform: translateY(-100%) translateX(50%) rotate(15deg) scaleX(-1);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(-50%) translateX(30%) rotate(5deg) scaleX(-1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(0%) translateX(0%) rotate(0deg) scale(1.2) scaleX(-1);
+  }
+  80% {
+    transform: translateY(50%) translateX(-30%) rotate(-10deg) scaleX(-1);
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(100%) translateX(-50%) rotate(-20deg) scaleX(-1);
+    opacity: 0;
+  }
 }
 
 @keyframes celebration {
@@ -179,6 +239,12 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes player-move {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3) translateY(-5px); }
+  100% { transform: scale(1); }
+}
+
 .animate-dice-roll {
   animation: dice-roll 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
@@ -191,16 +257,20 @@
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-.animate-slide-up {
-  animation: slide-up 0.8s ease-out forwards;
+.animate-pulse-red {
+  animation: pulse-red 2s ease-in-out infinite;
 }
 
-.animate-slide-down {
-  animation: slide-down 0.8s ease-out forwards;
+.animate-vehicle-travel {
+  animation: vehicle-travel 2s ease-in-out forwards;
 }
 
-.animate-train-move {
-  animation: train-move 2s ease-in-out forwards;
+.animate-vehicle-up {
+  animation: vehicle-up 2s ease-in-out forwards;
+}
+
+.animate-vehicle-down {
+  animation: vehicle-down 2s ease-in-out forwards;
 }
 
 .animate-celebration {
@@ -219,6 +289,10 @@
   animation: bounce-in 0.6s ease-out forwards;
 }
 
+.animate-player-move {
+  animation: player-move 0.4s ease-out;
+}
+
 /* Board Square Styles */
 .board-square {
   @apply relative flex items-center justify-center font-bold transition-all duration-200;
@@ -231,7 +305,7 @@
 }
 
 .board-square.has-player {
-  @apply ring-4 ring-accent;
+  @apply ring-2 ring-secondary;
 }
 
 /* Scrollbar */

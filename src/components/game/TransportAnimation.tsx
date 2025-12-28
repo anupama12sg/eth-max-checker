@@ -13,7 +13,7 @@ interface TransportAnimationProps {
 }
 
 const TransportAnimation = ({ transport, type, from, to, onComplete }: TransportAnimationProps) => {
-  const [stage, setStage] = useState<'enter' | 'show' | 'exit'>('enter');
+  const [stage, setStage] = useState<'start' | 'travel' | 'end'>('start');
 
   const getImage = () => {
     if (transport === 'wrongTrain') return localTrain;
@@ -28,9 +28,10 @@ const TransportAnimation = ({ transport, type, from, to, onComplete }: Transport
   const isGoingUp = type === 'ladder';
 
   useEffect(() => {
-    const timer1 = setTimeout(() => setStage('show'), 100);
-    const timer2 = setTimeout(() => setStage('exit'), 1500);
-    const timer3 = setTimeout(onComplete, 2000);
+    // Start travel animation after a brief delay
+    const timer1 = setTimeout(() => setStage('travel'), 200);
+    const timer2 = setTimeout(() => setStage('end'), 2200);
+    const timer3 = setTimeout(onComplete, 2500);
 
     return () => {
       clearTimeout(timer1);
@@ -40,58 +41,107 @@ const TransportAnimation = ({ transport, type, from, to, onComplete }: Transport
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm">
-      <div className="text-center">
-        {/* Transport Image */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-md overflow-hidden">
+      {/* Animated background lines */}
+      <div className="absolute inset-0 overflow-hidden">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <div
+            key={i}
+            className={`absolute h-1 ${isGoingUp ? 'bg-mumbai-green/30' : 'bg-primary/30'} rounded-full`}
+            style={{
+              width: `${Math.random() * 200 + 100}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              transform: isGoingUp ? 'rotate(-45deg)' : 'rotate(45deg)',
+              animation: `${isGoingUp ? 'slideUp' : 'slideDown'} ${1 + Math.random()}s linear infinite`,
+              animationDelay: `${Math.random() * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* From/To indicators */}
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 text-center z-10">
+        <div className="flex items-center gap-4 text-2xl font-bold">
+          <span className="px-4 py-2 bg-primary/20 rounded-xl border-2 border-primary">
+            {from}
+          </span>
+          <span className={`text-4xl ${isGoingUp ? 'text-mumbai-green' : 'text-primary'}`}>
+            {isGoingUp ? '→' : '→'}
+          </span>
+          <span className={`px-4 py-2 rounded-xl border-2 ${isGoingUp ? 'bg-mumbai-green/20 border-mumbai-green' : 'bg-primary/20 border-primary'}`}>
+            {to}
+          </span>
+        </div>
+      </div>
+
+      {/* Vehicle Animation Container */}
+      <div className="relative w-full h-64 flex items-center justify-center">
+        {/* Track/Path */}
+        <div 
+          className={`absolute w-[120%] h-2 ${isGoingUp ? 'bg-mumbai-green/40' : 'bg-primary/40'} rounded-full`}
+          style={{
+            transform: isGoingUp ? 'rotate(-15deg)' : 'rotate(15deg)',
+          }}
+        />
+
+        {/* Vehicle */}
         <div
           className={`
-            w-48 h-48 sm:w-64 sm:h-64 mx-auto mb-6
-            transition-all duration-1000 ease-out
-            ${stage === 'enter' ? (isGoingUp ? 'translate-y-32 opacity-0' : '-translate-y-32 opacity-0') : ''}
-            ${stage === 'show' ? 'translate-y-0 opacity-100' : ''}
-            ${stage === 'exit' ? (isGoingUp ? '-translate-y-32 opacity-0' : 'translate-y-32 opacity-0') : ''}
+            relative z-10
+            ${stage === 'travel' ? (isGoingUp ? 'animate-vehicle-up' : 'animate-vehicle-down') : ''}
+            ${stage === 'start' ? 'opacity-0' : ''}
           `}
-          style={{
-            transform: !isGoingUp && stage !== 'enter' ? 'scaleX(-1)' : undefined,
-          }}
         >
           <img
             src={getImage()}
             alt={getTransportName(transport)}
-            className="w-full h-full object-contain drop-shadow-2xl"
+            className="w-40 h-40 sm:w-56 sm:h-56 object-contain drop-shadow-2xl"
+            style={{
+              filter: `drop-shadow(0 0 20px ${isGoingUp ? 'hsl(145, 70%, 45%)' : 'hsl(0, 85%, 50%)'})`
+            }}
           />
         </div>
-
-        {/* Transport Name */}
-        <div
-          className={`
-            transition-all duration-500 delay-300
-            ${stage === 'show' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
-          `}
-        >
-          <h2 className={`font-display text-3xl sm:text-4xl mb-2 ${isGoingUp ? 'text-mumbai-green' : 'text-mumbai-red'}`}>
-            {type === 'ladder' ? getTransportName(transport) : 'Wrong Train! 😱'}
-          </h2>
-          <p className="text-xl text-muted-foreground">
-            {isGoingUp ? (
-              <>Moving up from <span className="text-foreground font-bold">{from}</span> to <span className="text-foreground font-bold">{to}</span>! 🎉</>
-            ) : (
-              <>Sliding down from <span className="text-foreground font-bold">{from}</span> to <span className="text-foreground font-bold">{to}</span>! 😅</>
-            )}
-          </p>
-        </div>
-
-        {/* Direction Arrow */}
-        <div
-          className={`
-            mt-6 text-6xl
-            transition-all duration-500 delay-500
-            ${stage === 'show' ? 'opacity-100' : 'opacity-0'}
-          `}
-        >
-          {isGoingUp ? '⬆️' : '⬇️'}
-        </div>
       </div>
+
+      {/* Transport Name & Message */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-center z-10">
+        <h2 
+          className={`font-display text-4xl sm:text-5xl mb-2 ${isGoingUp ? 'text-mumbai-green' : 'text-primary'}`}
+          style={{
+            textShadow: `0 0 20px ${isGoingUp ? 'hsl(145, 70%, 45%)' : 'hsl(0, 85%, 50%)'}`
+          }}
+        >
+          {type === 'ladder' ? getTransportName(transport) : 'Wrong Train! 😱'}
+        </h2>
+        <p className="text-xl text-muted-foreground">
+          {isGoingUp ? (
+            <span className="text-mumbai-green">Climbing up {to - from} squares! 🎉</span>
+          ) : (
+            <span className="text-primary">Sliding down {from - to} squares! 😅</span>
+          )}
+        </p>
+      </div>
+
+      {/* Particles */}
+      {stage === 'travel' && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {Array.from({ length: 30 }).map((_, i) => (
+            <div
+              key={i}
+              className={`absolute w-2 h-2 rounded-full ${
+                i % 3 === 0 ? 'bg-primary' : i % 3 === 1 ? 'bg-secondary' : 'bg-accent'
+              }`}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: isGoingUp ? '100%' : '0%',
+                animation: `confetti ${1 + Math.random() * 2}s linear forwards`,
+                animationDelay: `${Math.random() * 0.5}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
