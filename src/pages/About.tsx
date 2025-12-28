@@ -1,7 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import creatorAvatar from '@/assets/creator-avatar.jpeg';
-import { Twitter, Github, Globe } from 'lucide-react';
+import { Twitter, Linkedin, Globe } from 'lucide-react';
 
 const About = () => {
   return (
@@ -40,11 +40,11 @@ const About = () => {
 
                 {/* Bio */}
                 <div className="flex-1 text-center sm:text-left">
-                  <h2 className="text-2xl font-bold mb-2">Builder Anon</h2>
-                  <p className="text-primary font-medium mb-4">Web3 Developer & Mumbai Enthusiast</p>
+                  <h2 className="text-2xl font-bold mb-2">Anupama Singh</h2>
+                  <p className="text-primary font-medium mb-4">Web3 Developer & Blockchain Educator</p>
                   <p className="text-muted-foreground">
                     Passionate about building fun, engaging experiences for the Web3 community. 
-                    This game was created to celebrate the spirit of ETHMumbai and the amazing 
+                    This game was created to celebrate the spirit of ETHMumbai & the amazing 
                     journey of getting to the venue through Mumbai's iconic transportation system!
                   </p>
                 </div>
@@ -53,7 +53,7 @@ const About = () => {
               {/* Social Links */}
               <div className="flex justify-center sm:justify-start gap-4 mt-6 pt-6 border-t border-border">
                 <a
-                  href="https://twitter.com"
+                  href="https://x.com/Anu31415"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-muted rounded-lg hover:bg-primary hover:text-primary-foreground transition-all"
@@ -62,13 +62,13 @@ const About = () => {
                   <span className="text-sm font-medium">Twitter</span>
                 </a>
                 <a
-                  href="https://github.com"
+                  href="https://www.linkedin.com/in/anupama1208/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-muted rounded-lg hover:bg-secondary hover:text-secondary-foreground transition-all"
                 >
-                  <Github className="w-5 h-5" />
-                  <span className="text-sm font-medium">GitHub</span>
+                  <Linkedin className="w-5 h-5" />
+                  <span className="text-sm font-medium">LinkedIn</span>
                 </a>
               </div>
             </div>
@@ -82,7 +82,7 @@ const About = () => {
                 legendary transportation network.
               </p>
               <p className="text-muted-foreground mb-4">
-                From the iconic yellow-green auto rickshaws weaving through traffic, to the 
+                From the iconic black-yellow auto rickshaws weaving through traffic, to the 
                 lifeline Mumbai Local trains carrying millions daily, to the modern Vande 
                 Bharat Express representing India's technological progress—each element of 
                 this game reflects the vibrant energy of Mumbai.
@@ -99,7 +99,7 @@ const About = () => {
             <div className="text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <div className="inline-block px-8 py-4 bg-gradient-mumbai rounded-2xl card-shadow">
                 <p className="font-display text-2xl text-primary-foreground">
-                  Built for ETHMumbai 2025 🇮🇳
+                  Built for ETHMumbai 2026 🇮🇳
                 </p>
               </div>
             </div>
